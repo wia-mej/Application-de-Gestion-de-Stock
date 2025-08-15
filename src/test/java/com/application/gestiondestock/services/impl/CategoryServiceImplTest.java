@@ -1,6 +1,8 @@
 package com.application.gestiondestock.services.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.application.gestiondestock.dto.Categorydto;
+import com.application.gestiondestock.exception.EntityNotFoundException;
 import com.application.gestiondestock.exception.ErrorCodes;
 import com.application.gestiondestock.exception.InvalidEntityException;
 import org.junit.jupiter.api.Test;
@@ -70,5 +72,22 @@ public class CategoryServiceImplTest {
         assertEquals(1, expectedException.getErrors().size());
         assertEquals("Veuillez renseigner le code de la categorie", expectedException.getErrors().get(0));
     }
+
+    @Test
+    public void shouldThrowEntityNotFoundException() {
+        EntityNotFoundException expectedException = assertThrows(EntityNotFoundException.class, () -> service.findById(0));
+
+        assertEquals(ErrorCodes.CATEGORY_NOT_FOUND, expectedException.getErrorCode());
+        assertEquals("Aucune category avec l'ID = 0 n'a ete trouve dans la BDD", expectedException.getMessage());
+    }
+
+    @Test
+    void shouldThrowEntityNotFoundException2() {
+        // Vérifie qu'une exception de type EntityNotFoundException est levée
+        assertThrows(EntityNotFoundException.class, () -> {
+            service.findById(0); // Appelle la méthode testée
+        });
+    }
+
 
 }
